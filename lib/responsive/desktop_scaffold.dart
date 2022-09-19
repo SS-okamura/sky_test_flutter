@@ -5,6 +5,8 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
+import '../constants.dart';
+
 class DesktopScaffold extends StatefulWidget {
   const DesktopScaffold({Key? key}) : super(key: key);
 
@@ -45,8 +47,10 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        appBar: MyAppBer(titleName: 'カレンダー'),
+        drawer: MyDrawer(),
         floatingActionButton: FloatingActionButton(
-          child: const Text('Add appointment'),
+          child: const Text('Add'),
           onPressed: () {
             showDialog(
                 context: context,
@@ -54,7 +58,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                   return AlertDialog(
                     title: Container(child: new Text('$_subjectText')),
                     content: Container(
-                      height: 80,
+                      height: 200,
                       child: Column(
                         children: <Widget>[
                           Row(
@@ -88,7 +92,8 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                       ),
                     ),
                     actions: <Widget>[
-                      new FlatButton(
+                      // ignore: unnecessary_new
+                      new ElevatedButton(
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
@@ -167,7 +172,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                 ),
               ),
               actions: <Widget>[
-                new FlatButton(
+                new ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },

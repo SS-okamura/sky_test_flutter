@@ -5,11 +5,15 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:intl/intl.dart';
 import 'package:matcher/matcher.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:web_vue/constants.dart';
+import 'package:web_vue/responsive/tablet_scaffold.dart';
 import 'package:web_vue/util/my_box.dart';
 import 'package:web_vue/util/my_title.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'dart:async';
+
+import 'desktop_scaffold.dart';
 
 class mobileScaffold extends StatefulWidget {
   const mobileScaffold({Key? key}) : super(key: key);
@@ -20,6 +24,34 @@ class mobileScaffold extends StatefulWidget {
 
 class _mobileScaffoldState extends State<mobileScaffold> {
   @override
+  //カンレンダー用の変数
+  String _subjectText = '',
+      _startTimeText = '',
+      _endTimeText = '',
+      _dateText = '',
+      _timeDetails = '';
+
+  // （1） 入力された日付変数
+  DateTime _inputDate = DateTime.now();
+
+  Future _openSample1(BuildContext context) async {
+    // （3） ダイアログを表示する
+    final DateTime? _date = await showDatePicker(
+      context: context,
+      // （4） 処理指定日付
+      initialDate: DateTime.now(),
+      // （5） 指定できる日付範囲
+      firstDate: DateTime(2022, 1, 1),
+      lastDate: DateTime(2022, 12, 31),
+    );
+    // （6） 選択された場合に、値を設定する
+    if (_date != null) {
+      setState(() {
+        _inputDate = _date;
+      });
+    }
+  }
+
   Map<DateTime, List> _eventsList = {}; //追記
 
   DateTime _focused = DateTime.now();
@@ -52,7 +84,7 @@ class _mobileScaffoldState extends State<mobileScaffold> {
     var now = DateTime.now();
 
     /// 「時:分:秒」表記に文字列を変換するdateFormatを宣言する
-    var dateFormat = DateFormat('HH:mm:ss');
+    var dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss');
 
     /// nowをdateFormatでstringに変換する
     var timeString = dateFormat.format(now);
@@ -73,6 +105,7 @@ class _mobileScaffoldState extends State<mobileScaffold> {
 
   var _selectedValue = 'Hawaii';
   var _usStates = ["管理者", "生徒", "ユーザー"];
+  var _appColer = Colors.blue;
 
   Widget build(BuildContext context) {
     final _events = LinkedHashMap<DateTime, List>(
@@ -85,174 +118,396 @@ class _mobileScaffoldState extends State<mobileScaffold> {
     }
 
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.grey[900],
-          title: Text('S N A P S H O T'),
-          actions: <Widget>[
-            PopupMenuButton<String>(
-              icon: Icon(Icons.account_circle),
-              initialValue: _selectedValue,
-              onSelected: (String s) {
-                setState(() {
-                  _selectedValue = s;
-                });
-              },
-              itemBuilder: (BuildContext context) {
-                return _usStates.map((String s) {
-                  return PopupMenuItem(
-                    child: Text(s),
-                    value: s,
-                  );
-                }).toList();
-              },
-            )
-          ],
-        ),
+        // ignore: prefer_const_constructors
+        appBar: MyAppBer(titleName: 'D A S H B O R D'),
         backgroundColor: myDefalutBackground,
-        drawer: myDrawer,
-        body: Column(
-          children: [
-            AspectRatio(
-              aspectRatio: 3,
-              child: SizedBox(
-                width: double.infinity,
-                child: GridView.builder(
-                    itemCount: 1,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 1),
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          child: Center(
-                            child: Column(
-                              children: [
-                                Text(
-                                  _time,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: 64),
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    ElevatedButton(
-                                        onPressed: () {
-                                          print(_time);
-                                        },
-                                        child: Text('出社')),
-                                    ElevatedButton(
-                                        onPressed: () {
-                                          print(_time);
-                                        },
-                                        child: Text('退勤'))
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    }),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Table(
-                border: TableBorder.all(color: Colors.grey),
-                children: <TableRow>[
-                  TableRow(
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                      ),
-                      children: ['title1', 'title2']
-                          .map((e) => Container(
-                              alignment: Alignment.center,
-                              margin:
-                                  const EdgeInsets.only(top: 10, bottom: 10),
-                              child: Text(e)))
-                          .toList()),
-                  TableRow(
-                    children: ['abc', '123']
-                        .map((e) => Container(
-                            alignment: Alignment.center,
-                            margin: const EdgeInsets.only(top: 10, bottom: 10),
-                            child: Text(e)))
-                        .toList(),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Container(
-                color: Colors.grey[200],
-                child: Center(
+        drawer: MyDrawer(),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Card(
                   child: Column(
                     children: [
-                      Text('カレンダー'),
-                      TableCalendar(
-                        headerVisible: false,
-                        eventLoader: getEvent,
-                        firstDay: DateTime.utc(2022, 9, 1),
-                        lastDay: DateTime.utc(2022, 9, 31),
-                        selectedDayPredicate: (day) {
-                          return isSameDay(_selected, day);
-                        },
-                        // --追記----------------------------------
-                        onDaySelected: (selected, focused) {
-                          if (!isSameDay(_selected, selected)) {
-                            setState(() {
-                              _selected = selected;
-                              _focused = focused;
-                            });
-                          }
-                        },
-                        focusedDay: _focused,
-                        // カスタマイズ用の関数を渡してやりましょう
-                        calendarBuilders: CalendarBuilders(defaultBuilder:
-                            (BuildContext context, DateTime day,
-                                DateTime focusedDay) {
-                          return AnimatedContainer(
-                            duration: const Duration(milliseconds: 250),
-                            margin: EdgeInsets.zero,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.green[600]!,
-                                width: 0.5,
-                              ),
+                      Container(
+                        height: 200,
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey, //色
+                              spreadRadius: 1,
+                              blurRadius: 3,
+                              offset: Offset(1, 1),
                             ),
-                            alignment: Alignment.topCenter,
-                            child: Text(
-                              day.day.toString(),
-                              style: TextStyle(
-                                color: _textColor(day),
+                          ],
+                          color: Colors.grey[100],
+                        ),
+                        child: Center(
+                          child: Column(
+                            children: [
+                              Container(
+                                  color: Colors.blue,
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        'タイムレコーダー',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 15,
+                                            color: Colors.white),
+                                      ),
+                                    ],
+                                  )),
+                              Card(
+                                child: Container(
+                                  color: Colors.white,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Text(
+                                      _time,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.normal,
+                                          fontSize: 30),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          );
-                        }, markerBuilder: (BuildContext context, DateTime day,
-                            List<dynamic> dailyScheduleList) {
-                          print(dailyScheduleList);
-                          _dailyCount(List<dynamic> dailyScheduleList) {}
-                        }),
-
-                        // --追記----------------------------------
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        print(_time);
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.blue,
+                                        onPrimary: Colors.white,
+                                        elevation: 8,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      child: Text('出社')),
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        print(_time);
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.red,
+                                        onPrimary: Colors.white,
+                                        elevation: 8,
+                                        shape: const StadiumBorder(),
+                                      ),
+                                      child: Text('退勤')),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                      ListView(
-                        shrinkWrap: true,
-                        children: getEvent(_selected!)
-                            .map((event) => ListTile(
-                                  title: Text(event.toString()),
-                                ))
-                            .toList(),
-                      )
                     ],
                   ),
                 ),
               ),
-            ),
-          ],
+              Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: // 影のついたカードUIが作れる
+                      Card(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey, //色
+                            spreadRadius: 1,
+                            blurRadius: 3,
+                            offset: Offset(1, 1),
+                          ),
+                        ],
+                        color: Colors.grey[200],
+                      ),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(0.0),
+                            child: Container(
+                                color: Colors.blue,
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      'やることリスト',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.normal,
+                                          fontSize: 15,
+                                          color: Colors.white),
+                                    ),
+                                  ],
+                                )),
+                          ),
+                          Card(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey, //色
+                                    spreadRadius: 1,
+                                    blurRadius: 3,
+                                    offset: Offset(1, 1),
+                                  ),
+                                ],
+                                color: Colors.white,
+                              ),
+                              height: 60,
+                              child: Column(
+                                children: [
+                                  Center(
+                                      child: Column(
+                                    children: [
+                                      Text('2022/09/12'),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text('予約の確認をする'),
+                                      )
+                                    ],
+                                  )),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Card(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey, //色
+                                    spreadRadius: 1,
+                                    blurRadius: 3,
+                                    offset: Offset(1, 1),
+                                  ),
+                                ],
+                                color: Colors.white,
+                              ),
+                              height: 60,
+                              width: double.infinity,
+                              child: Text('Card'),
+                            ),
+                          ),
+                          Card(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey, //色
+                                    spreadRadius: 1,
+                                    blurRadius: 3,
+                                    offset: Offset(1, 1),
+                                  ),
+                                ],
+                                color: Colors.white,
+                              ),
+                              height: 60,
+                              width: double.infinity,
+                              child: Text('Card'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey, //色
+                          spreadRadius: 1,
+                          blurRadius: 3,
+                          offset: Offset(1, 1),
+                        ),
+                      ],
+                      color: Colors.white,
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          color: Colors.blue,
+                          child: Row(
+                            children: [
+                              Text(
+                                '今日の予定',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 15,
+                                    color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SfCalendar(
+                          view: CalendarView.day,
+                          monthViewSettings:
+                              MonthViewSettings(showAgenda: true),
+                          dataSource: getCalendarDataSource(),
+                          onTap: calendarTapped,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ));
+  }
+
+  void calendarTapped(CalendarTapDetails details) {
+    if (details.targetElement == CalendarElement.appointment) {
+      final Meeting appointmentDetails = details.appointments![0];
+      _subjectText = appointmentDetails.eventName!;
+      _dateText = DateFormat('MMMM dd, yyyy')
+          .format(appointmentDetails.from!)
+          .toString();
+      _startTimeText =
+          DateFormat('hh:mm a').format(appointmentDetails.from!).toString();
+      _endTimeText =
+          DateFormat('hh:mm a').format(appointmentDetails.to!).toString();
+      if (appointmentDetails.isAllDay!) {
+        _timeDetails = 'All day';
+      } else {
+        _timeDetails = '$_startTimeText - $_endTimeText';
+      }
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Container(child: new Text('$_subjectText')),
+              content: Container(
+                height: 80,
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          '$_dateText',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Text(_timeDetails,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400, fontSize: 15)),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text("Id:" + appointmentDetails.id.toString())
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                new ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: new Text('close'))
+              ],
+            );
+          });
+    }
+  }
+
+  MeetingDataSource getCalendarDataSource() {
+    List<Meeting> appointments = <Meeting>[];
+    appointments.add(Meeting(
+        from: DateTime.now().add(const Duration(hours: 2)),
+        to: DateTime.now().add(const Duration(hours: 5)),
+        eventName: 'Meeting',
+        background: Colors.pink,
+        id: 1));
+    appointments.add(Meeting(
+        from: DateTime.now().add(const Duration(hours: 4, days: -1)),
+        to: DateTime.now().add(const Duration(hours: 5, days: 5)),
+        eventName: 'Release Meeting',
+        background: Colors.lightBlueAccent,
+        id: 2));
+    appointments.add(Meeting(
+        from: DateTime.now().add(const Duration(hours: 2)),
+        to: DateTime.now().add(const Duration(hours: 4)),
+        eventName: 'Performance check',
+        background: Colors.amber,
+        id: 5));
+    appointments.add(Meeting(
+        from: DateTime.now().add(const Duration(hours: 6, days: -3)),
+        to: DateTime.now().add(const Duration(hours: 7, days: -3)),
+        eventName: 'Support',
+        background: Colors.green,
+        id: 3));
+    appointments.add(Meeting(
+        from: DateTime.now().add(const Duration(hours: 6, days: 2)),
+        to: DateTime.now().add(const Duration(hours: 7, days: 2)),
+        eventName: 'Retrospective',
+        background: Colors.purple,
+        id: 4));
+
+    return MeetingDataSource(appointments);
+  }
+}
+
+class Meeting {
+  Meeting(
+      {this.eventName,
+      this.from,
+      this.to,
+      this.background,
+      this.isAllDay = false,
+      this.id});
+
+  String? eventName;
+  DateTime? from;
+  DateTime? to;
+  Color? background;
+  bool? isAllDay;
+  int? id;
+}
+
+class MeetingDataSource extends CalendarDataSource {
+  MeetingDataSource(List<Meeting> source) {
+    appointments = source;
+  }
+
+  @override
+  DateTime getStartTime(int index) {
+    return appointments![index].from;
+  }
+
+  @override
+  DateTime getEndTime(int index) {
+    return appointments![index].to;
+  }
+
+  @override
+  String getSubject(int index) {
+    return appointments![index].eventName;
+  }
+
+  @override
+  bool isAllDay(int index) {
+    return appointments![index].isAllDay;
+  }
+
+  @override
+  Color getColor(int index) {
+    return appointments![index].background;
   }
 }

@@ -12,6 +12,7 @@ import 'package:web_vue/util/my_box.dart';
 import 'package:web_vue/util/my_title.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'dart:async';
+import 'package:geolocator/geolocator.dart';
 
 import 'desktop_scaffold.dart';
 
@@ -147,7 +148,7 @@ class _mobileScaffoldState extends State<mobileScaffold> {
                           child: Column(
                             children: [
                               Container(
-                                  color: Colors.blue,
+                                  color: Colors.white,
                                   child: Row(
                                     children: [
                                       Text(
@@ -155,7 +156,7 @@ class _mobileScaffoldState extends State<mobileScaffold> {
                                         style: TextStyle(
                                             fontWeight: FontWeight.normal,
                                             fontSize: 15,
-                                            color: Colors.white),
+                                            color: Colors.blue),
                                       ),
                                     ],
                                   )),
@@ -178,8 +179,18 @@ class _mobileScaffoldState extends State<mobileScaffold> {
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   ElevatedButton(
-                                      onPressed: () {
+                                      onPressed: () async {
+                                        Position position =
+                                            await Geolocator.getCurrentPosition(
+                                                desiredAccuracy:
+                                                    LocationAccuracy.high);
                                         print(_time);
+                                        // 北緯がプラス。南緯がマイナス
+                                        print("緯度: " +
+                                            position.latitude.toString());
+                                        // 東経がプラス、西経がマイナス
+                                        print("経度: " +
+                                            position.longitude.toString());
                                       },
                                       style: ElevatedButton.styleFrom(
                                         primary: Colors.blue,
@@ -192,8 +203,18 @@ class _mobileScaffoldState extends State<mobileScaffold> {
                                       ),
                                       child: Text('出社')),
                                   ElevatedButton(
-                                      onPressed: () {
+                                      onPressed: () async {
+                                        Position position =
+                                            await Geolocator.getCurrentPosition(
+                                                desiredAccuracy:
+                                                    LocationAccuracy.high);
                                         print(_time);
+                                        // 北緯がプラス。南緯がマイナス
+                                        print("緯度: " +
+                                            position.latitude.toString());
+                                        // 東経がプラス、西経がマイナス
+                                        print("経度: " +
+                                            position.longitude.toString());
                                       },
                                       style: ElevatedButton.styleFrom(
                                         primary: Colors.red,
@@ -204,6 +225,99 @@ class _mobileScaffoldState extends State<mobileScaffold> {
                                       child: Text('退勤')),
                                 ],
                               ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  ElevatedButton(
+                                      onPressed: () async {
+                                        Position position =
+                                            await Geolocator.getCurrentPosition(
+                                                desiredAccuracy:
+                                                    LocationAccuracy.high);
+                                        print(_time);
+                                        // 北緯がプラス。南緯がマイナス
+                                        print("緯度: " +
+                                            position.latitude.toString());
+                                        // 東経がプラス、西経がマイナス
+                                        print("経度: " +
+                                            position.longitude.toString());
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.red,
+                                        onPrimary: Colors.white,
+                                        elevation: 8,
+                                        shape: const StadiumBorder(),
+                                      ),
+                                      child: Text('退勤')),
+                                  ElevatedButton(
+                                      onPressed: () async {
+                                        Position position =
+                                            await Geolocator.getCurrentPosition(
+                                                desiredAccuracy:
+                                                    LocationAccuracy.high);
+                                        print(_time);
+                                        // 北緯がプラス。南緯がマイナス
+                                        print("緯度: " +
+                                            position.latitude.toString());
+                                        // 東経がプラス、西経がマイナス
+                                        print("経度: " +
+                                            position.longitude.toString());
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.red,
+                                        onPrimary: Colors.white,
+                                        elevation: 8,
+                                        shape: const StadiumBorder(),
+                                      ),
+                                      child: Text('退勤')),
+                                  ElevatedButton(
+                                      onPressed: () async {
+                                        Position position =
+                                            await Geolocator.getCurrentPosition(
+                                                desiredAccuracy:
+                                                    LocationAccuracy.high);
+                                        print(_time);
+                                        // 北緯がプラス。南緯がマイナス
+                                        print("緯度: " +
+                                            position.latitude.toString());
+                                        // 東経がプラス、西経がマイナス
+                                        print("経度: " +
+                                            position.longitude.toString());
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.red,
+                                        onPrimary: Colors.white,
+                                        elevation: 8,
+                                        shape: const StadiumBorder(),
+                                      ),
+                                      child: Text('退勤')),
+                                  ElevatedButton(
+                                      onPressed: () async {
+                                        Position position =
+                                            await Geolocator.getCurrentPosition(
+                                                desiredAccuracy:
+                                                    LocationAccuracy.high);
+                                        print(_time);
+                                        // 北緯がプラス。南緯がマイナス
+                                        print("緯度: " +
+                                            position.latitude.toString());
+                                        // 東経がプラス、西経がマイナス
+                                        print("経度: " +
+                                            position.longitude.toString());
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.red,
+                                        onPrimary: Colors.white,
+                                        elevation: 8,
+                                        shape: const StadiumBorder(),
+                                      ),
+                                      child: Text('退勤')),
+                                ],
+                              )
                             ],
                           ),
                         ),
@@ -233,7 +347,7 @@ class _mobileScaffoldState extends State<mobileScaffold> {
                           Padding(
                             padding: const EdgeInsets.all(0.0),
                             child: Container(
-                                color: Colors.blue,
+                                color: Colors.white,
                                 child: Row(
                                   children: [
                                     Text(
@@ -241,7 +355,7 @@ class _mobileScaffoldState extends State<mobileScaffold> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.normal,
                                           fontSize: 15,
-                                          color: Colors.white),
+                                          color: Colors.blue),
                                     ),
                                   ],
                                 )),
@@ -334,7 +448,7 @@ class _mobileScaffoldState extends State<mobileScaffold> {
                     child: Column(
                       children: [
                         Container(
-                          color: Colors.blue,
+                          color: Colors.white,
                           child: Row(
                             children: [
                               Text(
@@ -342,7 +456,7 @@ class _mobileScaffoldState extends State<mobileScaffold> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 15,
-                                    color: Colors.white),
+                                    color: Colors.blue),
                               ),
                             ],
                           ),

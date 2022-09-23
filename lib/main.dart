@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:web_vue/provider/event_provider.dart';
 import 'package:web_vue/responsive/desktop_scaffold.dart';
 import 'package:web_vue/responsive/mobile_scaffold.dart';
 import 'package:web_vue/responsive/responsive_layout.dart';
@@ -39,12 +41,15 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: ResponsiveLayout(
-          desktopScaffold: DesktopScaffold(),
-          mobileScaffold: mobileScaffold(),
-          tabletScaffold: tabletScaffold(),
-        ));
+    return ChangeNotifierProvider(
+      create: (context) => EventProvider(),
+      child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: ResponsiveLayout(
+            desktopScaffold: DesktopScaffold(),
+            mobileScaffold: mobileScaffold(),
+            tabletScaffold: tabletScaffold(),
+          )),
+    );
   }
 }

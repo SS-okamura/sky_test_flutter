@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:web_vue/page/chat_page.dart';
 import 'package:web_vue/responsive/tablet_scaffold.dart';
 
 import 'responsive/desktop_scaffold.dart';
@@ -102,6 +103,19 @@ class _MyDrawerState extends State<MyDrawer> {
                 );
               },
             ),
+            GestureDetector(
+              child: ListTile(
+                title: Text('チャット'),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChatPage(),
+                  ),
+                );
+              },
+            ),
             ListTile(
               title: Text('お休み連絡'),
             ),
@@ -154,6 +168,19 @@ class _MyDrawerState extends State<MyDrawer> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => DesktopScaffold(),
+                  ),
+                );
+              },
+            ),
+            GestureDetector(
+              child: ListTile(
+                title: Text('チャット'),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChatPage(),
                   ),
                 );
               },
@@ -215,6 +242,19 @@ class _MyDrawerState extends State<MyDrawer> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => DesktopScaffold(),
+                    ),
+                  );
+                },
+              ),
+              GestureDetector(
+                child: ListTile(
+                  title: Text('チャット'),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatPage(),
                     ),
                   );
                 },
@@ -346,6 +386,19 @@ class _MyDrawerState extends State<MyDrawer> {
                   );
                 },
               ),
+              GestureDetector(
+                child: ListTile(
+                  title: Text('チャット'),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatPage(),
+                    ),
+                  );
+                },
+              ),
               ListTile(
                 title: Text('生徒の出欠管理'),
               ),
@@ -431,6 +484,19 @@ class _MyDrawerState extends State<MyDrawer> {
               ListTile(
                 title: Text('お知らせ'),
               ),
+              GestureDetector(
+                child: ListTile(
+                  title: Text('チャット'),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatPage(),
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         ),
@@ -468,6 +534,19 @@ class _MyDrawerState extends State<MyDrawer> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => const tabletScaffold(),
+                    ),
+                  );
+                },
+              ),
+              GestureDetector(
+                child: ListTile(
+                  title: Text('チャット'),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatPage(),
                     ),
                   );
                 },

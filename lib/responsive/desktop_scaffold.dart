@@ -2,20 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:web_vue/event_editing_page.dart';
 
 import '../constants.dart';
-import '../model/event_data_source.dart';
+import '../model/event_data_sourve.dart';
+import '../page/event_editing_page.dart';
 import '../provider/event_provider.dart';
-import '../scheduleAdd.dart';
-
-DateTime _inputDate = DateTime.now();
-var _fromDatetime = DateTime.now();
-DateTime _toDatetime = DateTime.now();
+import '../widget/tasks_widget.dart';
 
 class DesktopScaffold extends StatefulWidget {
   const DesktopScaffold({Key? key}) : super(key: key);
@@ -25,49 +20,29 @@ class DesktopScaffold extends StatefulWidget {
 }
 
 class _DesktopScaffoldState extends State<DesktopScaffold> {
-  var _fromDatetime = DateTime.now();
-  List<Meeting> appointments = <Meeting>[];
-  String scheduleTitle = '';
-  TextEditingController _textEditingController = TextEditingController();
   String _subjectText = '',
       _startTimeText = '',
       _endTimeText = '',
       _dateText = '',
       _timeDetails = '';
 
-  var formatter = new DateFormat('yyyy/MM/dd(E) HH:mm');
+  // （1） 入力された日付変数
+  DateTime _inputDate = DateTime.now();
 
-  Future _openStartTime(BuildContext context) async {
+  Future _openSample1(BuildContext context) async {
     // （3） ダイアログを表示する
-    final DateTime? _date = await DatePicker.showDateTimePicker(context,
-        showTitleActions: true, onConfirm: (date) {
-      setState(() {
-        _fromDatetime = date;
-      });
-    }, currentTime: DateTime.now(), locale: LocaleType.jp);
+    final DateTime? _date = await showDatePicker(
+      context: context,
+      // （4） 処理指定日付
+      initialDate: DateTime.now(),
+      // （5） 指定できる日付範囲
+      firstDate: DateTime(2022, 1, 1),
+      lastDate: DateTime(2022, 12, 31),
+    );
     // （6） 選択された場合に、値を設定する
     if (_date != null) {
       setState(() {
-        _fromDatetime = _date;
-      });
-      print(_fromDatetime);
-    }
-  }
-
-  Future _openEndTime(BuildContext context) async {
-    // （3） ダイアログを表示する
-    final DateTime? _date = await DatePicker.showDateTimePicker(context,
-        showTitleActions: true, onConfirm: (date) {
-      print(_toDatetime);
-      _toDatetime = date;
-      print(_toDatetime);
-      setState(() {});
-    }, currentTime: DateTime.now(), locale: LocaleType.jp);
-    // （6） 選択された場合に、値を設定する
-    print(_date);
-    if (_date != null) {
-      setState(() {
-        _textEditingController.text = _date.toString();
+        _inputDate = _date;
       });
     }
   }
@@ -75,163 +50,41 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
   @override
   Widget build(BuildContext context) {
     final events = Provider.of<EventProvider>(context).events;
-    return ChangeNotifierProvider(
-      create: (context) => EventProvider(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          appBar: MyAppBer(titleName: 'カレンダー'),
-          drawer: MyDrawer(),
-          floatingActionButton: FloatingActionButton(
-              child: const Text('Add'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EventEditingPage(),
-                  ),
-                );
-              }
-              //   showModalBottomSheet(
-              //       builder: (BuildContext context) {
-              //         return StatefulBuilder(
-              //             builder: (context, StateSetter setState) {
-              //           return Container(
-              //               height: 400,
-              //               child: Center(
-              //                 child: Column(
-              //                   children: <Widget>[
-              //                     Padding(
-              //                       padding: const EdgeInsets.all(8.0),
-              //                       child: TextField(
-              //                         onChanged: (value) {
-              //                           scheduleTitle = value;
-              //                         },
-              //                         decoration: InputDecoration(
-              //                           hintText: 'タイトルを入力',
-              //                         ),
-              //                       ),
-              //                     ),
-              //                     Padding(
-              //                       padding: const EdgeInsets.all(8.0),
-              //                       child: OutlinedButton(
-              //                         onPressed: () async {
-              //                           // （3） ダイアログを表示する
-              //                           final DateTime? _date =
-              //                               await DatePicker.showDateTimePicker(
-              //                                   context,
-              //                                   showTitleActions: true,
-              //                                   onConfirm: (date) {
-              //                             _fromDatetime = date;
-              //                             setState(() {});
-              //                           },
-              //                                   currentTime: DateTime.now(),
-              //                                   locale: LocaleType.jp);
-              //                           // （6） 選択された場合に、値を設定する
-              //                           print(_date);
-              //                           if (_date != null) {
-              //                             setState(() {
-              //                               _textEditingController.text =
-              //                                   _date.toString();
-              //                             });
-              //                           }
-              //                         },
-              //                         child: Row(
-              //                           children: <Widget>[
-              //                             Text(
-              //                               '開始日時: ',
-              //                               style: TextStyle(
-              //                                 fontWeight: FontWeight.w400,
-              //                               ),
-              //                             ),
-              //                             Text(
-              //                               formatter.format(_fromDatetime),
-              //                             ),
-              //                           ],
-              //                         ),
-              //                       ),
-              //                     ),
-              //                     Padding(
-              //                       padding: const EdgeInsets.all(8.0),
-              //                       child: Row(
-              //                         children: <Widget>[
-              //                           Text(
-              //                             '終了日時: ',
-              //                             style: TextStyle(
-              //                               fontWeight: FontWeight.w400,
-              //                             ),
-              //                           ),
-              //                           OutlinedButton(
-              //                             onPressed: () async {
-              //                               final DateTime? _date =
-              //                                   await DatePicker.showDateTimePicker(
-              //                                       context,
-              //                                       showTitleActions: true,
-              //                                       onConfirm: (date) {
-              //                                 print(_toDatetime);
-              //                                 _toDatetime = date;
-              //                                 print(_toDatetime);
-              //                                 setState(() {});
-              //                               },
-              //                                       currentTime: DateTime.now(),
-              //                                       locale: LocaleType.jp);
-              //                               // （6） 選択された場合に、値を設定する
-              //                               print(_date);
-              //                               if (_date != null) {
-              //                                 setState(() {
-              //                                   _textEditingController.text =
-              //                                       _date.toString();
-              //                                 });
-              //                               }
-              //                             },
-              //                             child: Text(
-              //                               // フォーマッターを使用して指定したフォーマットで日時を表示
-              //                               // format()に渡すのはDate型の値で、String型で返される
-              //                               formatter.format(_toDatetime),
-              //                             ),
-              //                           ),
-              //                         ],
-              //                       ),
-              //                     ),
-              //                     Padding(
-              //                       padding: const EdgeInsets.all(8.0),
-              //                       child: Center(
-              //                         child: ElevatedButton(
-              //                             onPressed: () {
-              //                               print(scheduleTitle);
-              //                               appointments.add(Meeting(
-              //                                   from: _fromDatetime,
-              //                                   to: _toDatetime,
-              //                                   eventName: scheduleTitle,
-              //                                   background: Colors.pink,
-              //                                   isAllDay: true,
-              //                                   id: 1));
-              //                               setState() {}
-              //                             },
-              //                             child: new Text('追加')),
-              //                       ),
-              //                     ),
-              //                   ],
-              //                 ),
-              //               ));
-              //         });
-              //       },
-              //       context: context);
-              // },
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: MyAppBer(titleName: 'カレンダー'),
+        drawer: MyDrawer(),
+        floatingActionButton: FloatingActionButton(
+          child: const Text('Add'),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EventEditingPage(),
               ),
-          body: SafeArea(
-            child: SfCalendar(
-              view: CalendarView.week,
-              monthViewSettings: MonthViewSettings(showAgenda: true),
-              //dataSource: getCalendarDataSource(),
-              dataSource: EventDataSource(events),
-              onTap: calendarTapped,
-              allowedViews: [
-                CalendarView.day,
-                CalendarView.week,
-                CalendarView.month,
-              ],
-            ),
+            );
+          },
+        ),
+        body: SafeArea(
+          child: SfCalendar(
+            view: CalendarView.week,
+            monthViewSettings: MonthViewSettings(showAgenda: true),
+            //dataSource: getCalendarDataSource(),
+            dataSource: EventDataSource(events),
+            //onTap: calendarTapped,
+            onLongPress: (details) {
+              final provider =
+                  Provider.of<EventProvider>(context, listen: false);
+              provider.setDate(details.date!);
+              showModalBottomSheet(
+                  context: context, builder: (context) => TaskWidget());
+            },
+            allowedViews: [
+              CalendarView.day,
+              CalendarView.week,
+              CalendarView.month,
+            ],
           ),
         ),
       ),
@@ -239,6 +92,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
   }
 
   void calendarTapped(CalendarTapDetails details) {
+    print(details);
     if (details.targetElement == CalendarElement.appointment) {
       final Meeting appointmentDetails = details.appointments![0];
       _subjectText = appointmentDetails.eventName!;
@@ -302,6 +156,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
   }
 
   MeetingDataSource getCalendarDataSource() {
+    List<Meeting> appointments = <Meeting>[];
     appointments.add(Meeting(
         from: DateTime.now(),
         to: DateTime.now().add(const Duration(hours: 1)),

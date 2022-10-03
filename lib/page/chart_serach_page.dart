@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:web_vue/model/chart_title.dart';
 
+import '../provider/chart_title_provider.dart';
 import '../util/util.dart';
 
 class ChartSearchPage extends StatefulWidget {
@@ -11,18 +14,45 @@ class _ChartSearchPageState extends State<ChartSearchPage> {
   final _formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   late DateTime formDate;
+  List<DropdownMenuItem<int>> _items = [];
+  var _selectItem = 0;
+  late ChartTitle title;
 
   @override
   void initState() {
     super.initState();
-
+    setItems();
+    _selectItem = _items[0].value!;
     formDate = DateTime.now();
+  }
+
+  void setItems() {
+    _items
+      ..add(DropdownMenuItem(
+        child: Text(
+          'テーマA',
+        ),
+        value: 1,
+      ))
+      ..add(DropdownMenuItem(
+        child: Text(
+          'テーマB',
+        ),
+        value: 2,
+      ))
+      ..add(DropdownMenuItem(
+        child: Text(
+          'テーマC',
+        ),
+        value: 3,
+      ));
   }
 
   @override
   Widget build(BuildContext context) {
+    final chartTitles = Provider.of<ChartTitleProvider>(context).chartTitles;
     return Scaffold(
-        appBar: AppBar(actions: buildSearchingAction(), leading: CloseButton()),
+        appBar: AppBar(leading: CloseButton()),
         body: SingleChildScrollView(
           padding: EdgeInsets.all(12),
           child: Form(
@@ -32,7 +62,25 @@ class _ChartSearchPageState extends State<ChartSearchPage> {
               SizedBox(
                 height: 24,
               ),
-              buildDateTimePicker()
+              buildDateTimePicker(),
+              DropdownButton(
+                  style: TextStyle(fontSize: 20, color: Colors.black),
+                  items: _items,
+                  value: _selectItem,
+                  onChanged: (value) => {
+                        setState(() {
+                          _selectItem = value as int;
+                        }),
+                      }),
+              SizedBox(height: 100),
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.transparent,
+                    shadowColor: Colors.transparent),
+                icon: Icon(Icons.done),
+                label: Text('検索'),
+                onPressed: () {},
+              )
             ]),
           ),
         ));
@@ -52,7 +100,7 @@ class _ChartSearchPageState extends State<ChartSearchPage> {
   Widget buildText() => TextFormField(
         style: TextStyle(fontSize: 24),
         decoration: InputDecoration(
-            border: UnderlineInputBorder(), hintText: 'Add Title'),
+            border: UnderlineInputBorder(), hintText: 'キーワードを入力してください'),
         validator: (title) =>
             title != null && title.isEmpty ? 'タイトルが入力されていません' : null,
         controller: titleController,
@@ -66,7 +114,12 @@ class _ChartSearchPageState extends State<ChartSearchPage> {
         child: Row(
           children: [
             Expanded(
-                flex: 2,
+                flex: 1,
+                child: buildDropdownField(
+                    text: Utils.toDate(formDate),
+                    onClicked: () => pickFromDateTime(pickDate: true))),
+            Expanded(
+                flex: 1,
                 child: buildDropdownField(
                     text: Utils.toDate(formDate),
                     onClicked: () => pickFromDateTime(pickDate: true))),

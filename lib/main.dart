@@ -8,12 +8,15 @@ import 'package:web_vue/responsive/responsive_layout.dart';
 import 'package:web_vue/responsive/tablet_scaffold.dart';
 
 import 'provider/event_provider.dart';
+import 'provider/user_provider.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
 var userFlg = '';
+final selectedValue = '業者';
+final usStates = ["業者", "生徒", "講師", "保護者", "お掃除巡回スタッフ"];
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -31,6 +34,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<ChartTitleProvider>(
           create: (context) => ChartTitleProvider(),
+        ),
+        ChangeNotifierProvider<UserProvider>(
+          create: (context) => UserProvider(),
         ),
       ],
       child: MaterialApp(

@@ -305,50 +305,48 @@ class _tabletScaffoldState extends State<tabletScaffold> {
       },
       context: context);
 
-  Widget ChartList(int titleCount) => SingleChildScrollView(
-        child: ListView.builder(
-          shrinkWrap: true,
-          itemCount: titleCount,
-          itemBuilder: (BuildContext context, index) {
-            final charts = Provider.of<ChartProvider>(context).charts;
-            final chartTitles =
-                Provider.of<ChartTitleProvider>(context).chartTitles;
-            int titleIndex = index;
-            return Card(
-              child: Container(
-                color: Colors.grey[300],
-                child: Column(
-                  children: [
-                    ListTile(
-                      title: Text(
-                        chartTitles[index].title,
-                      ),
+  Widget ChartList(int titleCount) => ListView.builder(
+        shrinkWrap: true,
+        itemCount: titleCount,
+        itemBuilder: (BuildContext context, index) {
+          final charts = Provider.of<ChartProvider>(context).charts;
+          final chartTitles =
+              Provider.of<ChartTitleProvider>(context).chartTitles;
+          int titleIndex = index;
+          return Card(
+            child: Container(
+              color: Colors.grey[300],
+              child: Column(
+                children: [
+                  ListTile(
+                    title: Text(
+                      chartTitles[index].title,
                     ),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: charts.length,
-                      itemBuilder: (BuildContext context, index) {
-                        return Card(
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [Text(charts[index].date.toString())],
+                  ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: charts.length,
+                    itemBuilder: (BuildContext context, index) {
+                      return Card(
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [Text(charts[index].date.toString())],
+                            ),
+                            ListTile(
+                              title: Text(
+                                charts[index].content,
                               ),
-                              ListTile(
-                                title: Text(
-                                  charts[index].content,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    )
-                  ],
-                ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  )
+                ],
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       );
 }

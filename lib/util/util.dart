@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 class Utils {
   static String toDate(DateTime dateTime) {
-    final date = DateFormat('yyyy/MM/dd(E)').format(dateTime);
+    final date = DateFormat('yyyy/MM/dd').format(dateTime);
     return '$date';
   }
 

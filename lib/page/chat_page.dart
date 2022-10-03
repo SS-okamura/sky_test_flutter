@@ -16,9 +16,6 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: MyAppBer(titleName: 'チャット画面'),
-      ),
       backgroundColor: Colors.blueGrey,
       body: Column(
         mainAxisSize: MainAxisSize.min,

@@ -131,7 +131,7 @@ class _mobileScaffoldState extends State<mobileScaffold> {
                   child: Column(
                     children: [
                       Container(
-                        height: 200,
+                        height: 150,
                         decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(
